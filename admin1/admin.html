@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Daily Wishes ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #fff5f8 0%, #ffeef4 50%, #f5f2ff 100%);
+      color: #5a3a4a;
+      padding: 20px 14px 48px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .header-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ffd6e5;
+      border-radius: 22px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 24px rgba(235, 140, 175, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #b84a76;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #2f7a52;
+      background: #e9f9f0;
+      border: 1px solid #bde8cf;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #ffd6e5;
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: 0 6px 18px rgba(235, 140, 175, 0.1);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #b84a76;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .stat-box {
+      background: #fff8fb;
+      border: 1px solid #ffe0ec;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: #d63f7d;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #8c6075;
+      margin-top: 2px;
+    }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .row-item {
+      background: #fff8fb;
+      border: 1px solid #ffe0ec;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .row-meta {
+      font-size: 11px;
+      color: #9e6b82;
+      margin-top: 3px;
+    }
+    .today-pill {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #b84a76;
+      background: #ffe6f0;
+      border: 1px solid #ffc6dc;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+    .done-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    button.danger {
+      font-family: inherit;
+      border: 1px solid #ffc7d6;
+      background: #fff0f4;
+      color: #b83b5e;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    button.danger:hover {
+      background: #ffe1ea;
+    }
+    @media (max-width: 520px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-card">
+      <div class="header-title">Admin Dashboard - Daily Wishes ♡</div>
+      <div class="badge" id="syncStatus">Realtime: Đang kết nối...</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Tổng quan tháng hiện tại</span></div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="adminAttendanceCount">0</div>
+          <div class="stat-label">Ngày điểm danh</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="adminPlansCount">0</div>
+          <div class="stat-label">Kế hoạch tuần</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="adminNotesCount">0</div>
+          <div class="stat-label">Tâm sự đã nhận</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Tâm sự & nguyện vọng</span></div>
+      <div class="list" id="notesList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Kế hoạch tuần</span></div>
+      <div class="list" id="adminPlansList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>Lịch sử ngày điểm danh</span>
+        <span class="row-meta" id="attendanceMonthLabel"></span>
+      </div>
+      <div class="list" id="attendanceList"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://wnnpoinrdawukynhltnu.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndubnBvaW5yZGF3dWt5bmhsdG51Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUzNDg0NDQsImV4cCI6MjExMDkyNDQ0NH0.XKql44qzvDCPT-0TuNOeKOvxNaSqSHp9b01KjelKphI';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
+        .replace(/"/g, '"');
+    }
+
+    function getTodayIsoDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getCurrentMonthPrefix() {
+      return getTodayIsoDate().slice(0, 8);
+    }
+
+    function formatVietnameseAttendanceDate(isoDate) {
+      const parts = String(isoDate).slice(0, 10).split('-');
+      if (parts.length !== 3) return isoDate;
+      const year = Number(parts[0]);
+      const month = Number(parts[1]);
+      const day = Number(parts[2]);
+      const dateObj = new Date(year, month - 1, day);
+      if (Number.isNaN(dateObj.getTime())) return isoDate;
+
+      const weekdayNames = [
+        'Chủ nhật',
+        'Thứ hai',
+        'Thứ ba',
+        'Thứ tư',
+        'Thứ năm',
+        'Thứ sáu',
+        'Thứ bảy'
+      ];
+      const weekday = weekdayNames[dateObj.getDay()];
+      const dd = String(day).padStart(2, '0');
+      const mm = String(month).padStart(2, '0');
+      return `${weekday}, ${dd}/${mm}/${year}`;
+    }
+
+    async function loadNotes() {
+      const listEl = document.getElementById("notesList");
+      const countEl = document.getElementById("adminNotesCount");
+      if (!listEl) return;
+
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .order('id', { ascending: false });
+
+      if (error || !Array.isArray(data)) return;
+      if (countEl) countEl.textContent = data.length;
+
+      listEl.replaceChildren();
+      if (!data.length) {
+        listEl.innerHTML = `<div class="row-meta">Chưa có tâm sự nào.</div>`;
+        return;
+      }
+
+      data.forEach((note) => {
+        const row = document.createElement("div");
+        row.className = "row-item";
+
+        const contentWrap = document.createElement("div");
+        const textDiv = document.createElement("div");
+        textDiv.innerHTML = escapeHtml(note.content || '');
+        const metaDiv = document.createElement("div");
+        metaDiv.className = "row-meta";
+        metaDiv.textContent = note.created_at
+          ? new Date(note.created_at).toLocaleString("vi-VN")
+          : "";
+
+        contentWrap.appendChild(textDiv);
+        contentWrap.appendChild(metaDiv);
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "danger";
+        delBtn.textContent = "Xóa";
+        delBtn.onclick = async () => {
+          await supabase.from('notes').delete().eq('id', note.id);
+          await loadNotes();
+        };
+
+        row.appendChild(contentWrap);
+        row.appendChild(delBtn);
+        listEl.appendChild(row);
+      });
+    }
+
+    async function loadAdminPlans() {
+      const listEl = document.getElementById("adminPlansList");
+      const countEl = document.getElementById("adminPlansCount");
+      if (!listEl) return;
+
+      const { data, error } = await supabase
+        .from('weekly_plans')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error || !Array.isArray(data)) return;
+      if (countEl) countEl.textContent = data.length;
+
+      listEl.replaceChildren();
+      if (!data.length) {
+        listEl.innerHTML = `<div class="row-meta">Chưa có kế hoạch nào.</div>`;
+        return;
+      }
+
+      data.forEach((plan) => {
+        const row = document.createElement("div");
+        row.className = "row-item";
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = plan.done ? "done-text" : "";
+        titleSpan.innerHTML = escapeHtml(plan.title || '');
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "danger";
+        delBtn.textContent = "Xóa";
+        delBtn.onclick = async () => {
+          await supabase.from('weekly_plans').delete().eq('id', plan.id);
+          await loadAdminPlans();
+        };
+
+        row.appendChild(titleSpan);
+        row.appendChild(delBtn);
+        listEl.appendChild(row);
+      });
+    }
+
+    async function loadAttendance() {
+      const listEl = document.getElementById("attendanceList");
+      const countEl = document.getElementById("adminAttendanceCount");
+      const monthLabelEl = document.getElementById("attendanceMonthLabel");
+      if (!listEl) return;
+
+      const now = new Date();
+      if (monthLabelEl) {
+        monthLabelEl.textContent = `Tháng ${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+      }
+
+      const { data, error } = await supabase
+        .from('attendance')
+        .select('*')
+        .order('visit_date', { ascending: false });
+
+      if (error || !Array.isArray(data)) return;
+
+      const todayIso = getTodayIsoDate();
+      const prefix = getCurrentMonthPrefix();
+      const monthRows = data.filter((item) =>
+        String(item.visit_date || item.date || '').slice(0, 10).startsWith(prefix)
+      );
+      if (countEl) countEl.textContent = monthRows.length;
+
+      listEl.replaceChildren();
+      if (!data.length) {
+        listEl.innerHTML = `<div class="row-meta">Chưa có ngày điểm danh nào.</div>`;
+        return;
+      }
+
+      data.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "row-item";
+
+        const rawDate = String(item.visit_date || item.date || '').slice(0, 10);
+        const formattedDate = formatVietnameseAttendanceDate(rawDate);
+        const timeStr = item.visited_at
+          ? new Date(item.visited_at).toLocaleTimeString("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit"
+            })
+          : "";
+        const isToday = rawDate === todayIso;
+
+        const left = document.createElement("div");
+        left.innerHTML = `
+          <div>
+            <strong>${escapeHtml(formattedDate)}</strong>
+            ${isToday ? `<span class="today-pill">Hôm nay</span>` : ""}
+          </div>
+          <div class="row-meta">
+            Mã ngày: ${escapeHtml(rawDate)}${timeStr ? ` · Điểm danh lúc ${escapeHtml(timeStr)}` : ""}
+          </div>
+        `;
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "danger";
+        delBtn.textContent = "Xóa";
+        delBtn.onclick = async () => {
+          if (item.id !== undefined && item.id !== null) {
+            await supabase.from('attendance').delete().eq('id', item.id);
+          } else {
+            await supabase.from('attendance').delete().eq('visit_date', rawDate);
+          }
+          await loadAttendance();
+        };
+
+        row.appendChild(left);
+        row.appendChild(delBtn);
+        listEl.appendChild(row);
+      });
+    }
+
+    async function refreshAll() {
+      await Promise.all([loadNotes(), loadAdminPlans(), loadAttendance()]);
+    }
+
+    function setupRealtime() {
+      const statusEl = document.getElementById("syncStatus");
+      supabase
+        .channel('daily-wishes-admin-sync')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notes' }, () => {
+          loadNotes();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_plans' }, () => {
+          loadAdminPlans();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'attendance' }, () => {
+          loadAttendance();
+        })
+        .subscribe((status) => {
+          if (!statusEl) return;
+          if (status === 'SUBSCRIBED') {
+            statusEl.textContent = "Realtime: Đã đồng bộ";
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            statusEl.textContent = "Realtime: Đang thử lại...";
+          }
+        });
+    }
+
+    refreshAll();
+    setupRealtime();
+  </script>
+</body>
+</html>

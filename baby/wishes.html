@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Wishes ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #fff5f8 0%, #ffeef4 50%, #f9f2ff 100%);
+      color: #5a3a4a;
+      padding: 20px 14px 48px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .header-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid #ffd6e5;
+      border-radius: 22px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 24px rgba(235, 140, 175, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #b84a76;
+    }
+    .header-date {
+      font-size: 12px;
+      color: #9e6b82;
+      font-weight: 500;
+      background: #fff0f6;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid #ffd9e8;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ffd6e5;
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: 0 6px 18px rgba(235, 140, 175, 0.1);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #b84a76;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wish-box {
+      background: #fff7fa;
+      border: 1px dashed #f7bfd4;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #5c3749;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+    }
+    button {
+      font-family: inherit;
+      border: none;
+      border-radius: 12px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff7eb3, #ff5e9c);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 94, 156, 0.25);
+      transition: transform 0.12s ease, opacity 0.15s ease;
+    }
+    button:hover {
+      transform: translateY(-1px);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button.secondary {
+      background: #fff0f6;
+      color: #b84a76;
+      border: 1px solid #ffc9df;
+      box-shadow: none;
+      padding: 6px 11px;
+      font-size: 11px;
+    }
+    .streak-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .streak-text {
+      font-size: 13px;
+      color: #5a3a4a;
+    }
+    .streak-text strong {
+      color: #d63f7d;
+      font-size: 16px;
+    }
+    .streak-sub {
+      font-size: 11px;
+      color: #9e6b82;
+      margin-top: 6px;
+    }
+    .plan-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 13px;
+      color: #4f2f3f;
+      background: #fff9fb;
+      border: 1px solid #ffd1e3;
+      border-radius: 12px;
+      padding: 9px 12px;
+      outline: none;
+    }
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #ff7eb3;
+      background: #fff;
+    }
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+    .plan-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .plan-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fff8fb;
+      border: 1px solid #ffe0ec;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    .plan-item.completed span {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(65, 25, 45, 0.38);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal.open {
+      display: flex;
+    }
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 22px;
+      padding: 20px;
+      border: 1px solid #ffd4e5;
+      box-shadow: 0 14px 36px rgba(180, 70, 115, 0.22);
+      text-align: center;
+    }
+    .modal-box h3 {
+      font-size: 16px;
+      color: #b84a76;
+      margin-bottom: 10px;
+    }
+    .modal-box p {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      color: #5a3a4a;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-card">
+      <div class="header-title">Daily Wishes ♡</div>
+      <div class="header-date" id="today"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>Lời chúc mỗi ngày</span>
+        <button class="secondary" id="todayWishBtn" type="button">Thông điệp hôm nay ✨</button>
+      </div>
+      <div class="wish-box" id="wish"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Điểm danh tháng</span></div>
+      <div class="streak-row">
+        <div class="streak-text">
+          Đã điểm danh: <strong id="streakCount">0</strong> / <span id="totalDaysInMonth">30</span> ngày
+        </div>
+        <button id="claimRewardBtn" type="button" style="display: none;">Nhận quà tháng 🎁</button>
+      </div>
+      <div class="streak-sub" id="attendanceTodayStatus">Đang ghi nhận điểm danh hôm nay...</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Kế hoạch tuần này</span></div>
+      <div class="plan-form">
+        <input type="text" id="planTitleInput" placeholder="Thêm một việc nhỏ xinh cho tuần..." />
+        <button id="addPlanBtn" type="button">Thêm</button>
+      </div>
+      <div class="plan-list" id="planList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Gửi tâm sự & nguyện vọng</span></div>
+      <textarea id="wishNoteInput" placeholder="Hôm nay bạn muốn nhắn gửi điều gì..."></textarea>
+      <button id="sendAdminBtn" type="button">Gửi tâm sự ♡</button>
+    </div>
+  </div>
+
+  <div class="modal" id="rewardModal">
+    <div class="modal-box">
+      <h3>Quà điểm danh đủ tháng 🎉</h3>
+      <p id="rewardResultText">Bấm quay để mở quà bất ngờ nhé!</p>
+      <div class="modal-actions">
+        <button id="spinRewardBtn" type="button">Quay quà</button>
+        <button class="secondary" id="closeRewardBtn" type="button">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://wnnpoinrdawukynhltnu.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_IUqPsueUh8rWjMjdjwC4BQ_cG7LSl6d';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const wishesList = [
+      "Chúc bạn hôm nay luôn mỉm cười, gặp thật nhiều điều may mắn và bình yên. ♡",
+      "Mong mọi điều tốt đẹp sẽ nhẹ nhàng tìm đến bạn, như nắng ghé qua ô cửa. 🌷",
+      "Chúc bạn ăn ngon, ngủ ngoan, làm gì cũng thuận lợi và luôn được yêu thương.",
+      "Mỗi ngày là một khởi đầu mới. Chúc bạn luôn tin vào những điều tốt đẹp phía trước."
+    ];
+
+    const rewardsPool = [
+      "🧋 Một ly trà sữa size lớn theo sở thích!",
+      "💸 Tiền lì xì / thưởng 10k cute!",
+      "🍨 Một phần kem hoặc đồ ăn vặt chiều nay!",
+      "💌 Một voucher 'được miễn làm việc nhà / được chiều hết nấc' 1 ngày!"
+    ];
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
+        .replace(/"/g, '"');
+    }
+
+    function getMonthContext() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return {
+        dateString: `${year}-${month}-${day}`,
+        displayDate: `${day}/${month}/${year}`,
+        timeString: now.toISOString(),
+        monthPrefix: `${year}-${month}-`,
+        localKey: `daily_wishes_attendance_${year}_${month}`,
+        daysInMonth: new Date(year, now.getMonth() + 1, 0).getDate()
+      };
+    }
+
+    function showDailyWish() {
+      const el = document.getElementById("wish");
+      if (!el) return;
+      const idx = Math.floor(Math.random() * wishesList.length);
+      el.textContent = wishesList[idx];
+    }
+
+    function renderAttendanceCount(totalChecked, daysInMonth) {
+      const totalEl = document.getElementById("totalDaysInMonth");
+      const streakEl = document.getElementById("streakCount");
+      const rewardBtn = document.getElementById("claimRewardBtn");
+
+      if (totalEl) totalEl.textContent = daysInMonth;
+      if (streakEl) streakEl.textContent = totalChecked;
+      if (rewardBtn && totalChecked >= daysInMonth) {
+        rewardBtn.style.display = "inline-block";
+      }
+    }
+
+    function readLocalAttendance(localKey) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(localKey) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function writeLocalAttendance(localKey, dates) {
+      try {
+        localStorage.setItem(localKey, JSON.stringify(dates));
+      } catch (_) {}
+    }
+
+    async function syncAttendanceFromCloud(localDates, ctx) {
+      const { data, error } = await supabase.from('attendance').select('*');
+      if (error || !Array.isArray(data)) return localDates;
+
+      const cloudDates = data
+        .map((item) => String(item.visit_date || item.date || '').slice(0, 10))
+        .filter((d) => d.startsWith(ctx.monthPrefix));
+
+      const merged = Array.from(new Set([...localDates, ...cloudDates]));
+      writeLocalAttendance(ctx.localKey, merged);
+      renderAttendanceCount(merged.length, ctx.daysInMonth);
+      return merged;
+    }
+
+    async function processDailyAttendance() {
+      const ctx = getMonthContext();
+      const statusEl = document.getElementById("attendanceTodayStatus");
+      let localDates = readLocalAttendance(ctx.localKey);
+
+      if (!localDates.includes(ctx.dateString)) {
+        localDates.push(ctx.dateString);
+        writeLocalAttendance(ctx.localKey, localDates);
+      }
+      renderAttendanceCount(localDates.length, ctx.daysInMonth);
+
+      try {
+        const { data: existingRows, error: checkError } = await supabase
+          .from('attendance')
+          .select('visit_date')
+          .eq('visit_date', ctx.dateString);
+
+        if (checkError) {
+          if (statusEl) statusEl.textContent = `Đã lưu tạm ngày ${ctx.displayDate} trên máy.`;
+          return;
+        }
+
+        if (!existingRows || existingRows.length === 0) {
+          const { error: insertError } = await supabase
+            .from('attendance')
+            .insert([{ visit_date: ctx.dateString, visited_at: ctx.timeString }]);
+          if (insertError) {
+            if (statusEl) statusEl.textContent = `Đã lưu tạm ngày ${ctx.displayDate} trên máy.`;
+            return;
+          }
+        }
+
+        await syncAttendanceFromCloud(localDates, ctx);
+        if (statusEl) statusEl.textContent = `Đã đồng bộ điểm danh ngày ${ctx.displayDate} ✓`;
+      } catch (_) {
+        if (statusEl) statusEl.textContent = `Đã lưu tạm ngày ${ctx.displayDate} trên máy.`;
+      }
+    }
+
+    function renderPlans(weeklyPlans) {
+      const listEl = document.getElementById("planList");
+      if (!listEl) return;
+      listEl.replaceChildren();
+
+      if (!weeklyPlans.length) {
+        listEl.innerHTML = `<div style="font-size:11px; color:#b895a5; text-align:center; padding:10px;">Chưa có kế hoạch nào.</div>`;
+        return;
+      }
+
+      weeklyPlans.forEach((plan) => {
+        const item = document.createElement("div");
+        item.className = `plan-item ${plan.done ? 'completed' : ''}`;
+
+        const titleSpan = document.createElement("span");
+        titleSpan.innerHTML = escapeHtml(plan.title);
+
+        const checkBtn = document.createElement("button");
+        checkBtn.className = "secondary";
+        checkBtn.textContent = plan.done ? "Bỏ qua" : "Xong";
+        checkBtn.onclick = async () => {
+          await supabase.from('weekly_plans').update({ done: !plan.done }).eq('id', plan.id);
+          await loadPlans();
+        };
+
+        item.appendChild(titleSpan);
+        item.appendChild(checkBtn);
+        listEl.appendChild(item);
+      });
+    }
+
+    async function loadPlans() {
+      try {
+        const { data, error } = await supabase
+          .from('weekly_plans')
+          .select('*')
+          .order('id', { ascending: true });
+        if (!error) renderPlans(data || []);
+      } catch (_) {
+        renderPlans([]);
+      }
+    }
+
+    const addPlanBtn = document.getElementById("addPlanBtn");
+    if (addPlanBtn) {
+      addPlanBtn.onclick = async () => {
+        const input = document.getElementById("planTitleInput");
+        const val = input ? input.value.trim() : "";
+        if (!val) return;
+        const { error } = await supabase.from('weekly_plans').insert([{ title: val, done: false }]);
+        if (!error && input) {
+          input.value = "";
+          await loadPlans();
+        }
+      };
+    }
+
+    const sendAdminBtn = document.getElementById("sendAdminBtn");
+    if (sendAdminBtn) {
+      sendAdminBtn.onclick = async () => {
+        const noteInput = document.getElementById("wishNoteInput");
+        const note = noteInput ? noteInput.value.trim() : "";
+        if (!note) {
+          alert("Vui lòng nhập nội dung!");
+          return;
+        }
+
+        const { error } = await supabase.from('notes').insert([
+          { content: note, created_at: new Date().toISOString() }
+        ]);
+
+        if (error) {
+          alert("Gửi thất bại, kiểm tra lại kết nối!");
+        } else {
+          alert("Đã gửi tâm sự thành công! ♡");
+          if (noteInput) noteInput.value = "";
+        }
+      };
+    }
+
+    function setupRealtimeSync() {
+      const ctx = getMonthContext();
+      supabase
+        .channel('daily-wishes-index-sync')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_plans' }, () => {
+          loadPlans();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'attendance' }, async () => {
+          const localDates = readLocalAttendance(ctx.localKey);
+          await syncAttendanceFromCloud(localDates, ctx);
+        })
+        .subscribe();
+    }
+
+    const rewardModal = document.getElementById("rewardModal");
+    const claimRewardBtn = document.getElementById("claimRewardBtn");
+    const closeRewardBtn = document.getElementById("closeRewardBtn");
+    const spinRewardBtn = document.getElementById("spinRewardBtn");
+
+    if (claimRewardBtn && rewardModal) {
+      claimRewardBtn.onclick = () => rewardModal.classList.add("open");
+    }
+    if (closeRewardBtn && rewardModal) {
+      closeRewardBtn.onclick = () => rewardModal.classList.remove("open");
+    }
+    if (spinRewardBtn) {
+      spinRewardBtn.onclick = () => {
+        const picked = rewardsPool[Math.floor(Math.random() * rewardsPool.length)];
+        const resultEl = document.getElementById("rewardResultText");
+        if (resultEl) resultEl.textContent = `Phần thưởng của bạn: ${picked}`;
+      };
+    }
+
+    showDailyWish();
+    processDailyAttendance();
+    loadPlans();
+    setupRealtimeSync();
+
+    const todayWishBtn = document.getElementById("todayWishBtn");
+    const todayEl = document.getElementById("today");
+    if (todayWishBtn) todayWishBtn.onclick = showDailyWish;
+    if (todayEl) todayEl.textContent = new Date().toLocaleDateString("vi-VN");
+  </script>
+</body>
+</html>
